@@ -29,10 +29,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.11.1"
+      - name: Generate Gradle wrapper
+        run: gradle wrapper --gradle-version 8.11.1
       - name: Build debug APK
-        run: gradle :app:assembleDebug
+        run: ./gradlew :app:assembleDebug
       - name: Run unit tests
-        run: gradle :app:testDebugUnitTest
+        run: ./gradlew :app:testDebugUnitTest
       - name: Run Room and UI instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -40,7 +42,15 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_6
-          script: gradle :app:connectedDebugAndroidTest
+          script: ./gradlew :app:connectedDebugAndroidTest
+      - name: Upload generated Gradle wrapper
+        uses: actions/upload-artifact@v4
+        with:
+          name: levelup-gradle-wrapper
+          path: |
+            gradlew
+            gradlew.bat
+            gradle/wrapper/
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
