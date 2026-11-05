@@ -1,6 +1,8 @@
 package com.novara.levelup.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -72,9 +74,9 @@ fun LevelUpApp() {
     ) { padding ->
         when (tab) {
             0 -> HomeScreen(state.player, state.quests, padding, vm::claimQuest)
-            1 -> QuestScreen(state.quests, padding, vm::claimQuest)
+            1 -> QuestScreen(state.quests, padding, vm::claimQuest, vm::addQuest)
             2 -> CharacterScreen(state.player, padding)
-            else -> HabitScreen(state.habits, padding, vm::setHabit)
+            else -> HabitScreen(state.habits, padding, vm::setHabit, vm::addHabit)
         }
     }
 }
@@ -104,17 +106,86 @@ private fun HomeScreen(player: PlayerEntity, quests: List<QuestWithStatus>, padd
 }
 
 @Composable
-private fun QuestScreen(quests: List<QuestWithStatus>, padding: PaddingValues, claim: (Int) -> Unit) {
-    LazyColumn(
-        Modifier.fillMaxSize().padding(padding).padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
+private fun QuestScreen(
+    quests: List<QuestWithStatus>,
+    padding: PaddingValues,
+    claim: (Int) -> Unit,
+    addQuest: (String, String, String, String) -> Unit
+) {
+    var showEditor by remember { mutableStateOf(false) }
+    LazyColumn(Modifier.fillMaxSize().padding(padding).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         item {
             Text("Your quests", color = Color.White, fontSize = 27.sp, fontWeight = FontWeight.Bold)
             Text("Choose a mission. Earn your XP.", color = Muted)
+            Button(onClick = { showEditor = true }, modifier = Modifier.padding(top = 12.dp), colors = ButtonDefaults.buttonColors(containerColor = Purple)) {
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(Modifier.width(6.dp))
+                Text("Create quest")
+            }
         }
         items(quests, key = { it.id }) { QuestCard(it, claim) }
     }
+    if (showEditor) QuestEditorDialog(
+        onDismiss = { showEditor = false },
+        onSave = { title, detail, difficulty, category ->
+            addQuest(title, detail, difficulty, category)
+            showEditor = false
+        }
+    )
+}
+
+@Composable
+private fun QuestEditorDialog(
+    onDismiss: () -> Unit,
+    onSave: (String, String, String, String) -> Unit
+) {
+    var title by remember { mutableStateOf("") }
+    var detail by remember { mutableStateOf("") }
+    var difficulty by remember { mutableStateOf("NORMAL") }
+    var category by remember { mutableStateOf("DISCIPLINE") }
+    val categories = listOf("STRENGTH", "INTELLIGENCE", "WELLNESS", "DISCIPLINE", "CREATIVITY")
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Create a quest") },
+        text = {
+            Column(
+                Modifier.heightIn(max = 440.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Quest name") }, singleLine = true)
+                OutlinedTextField(value = detail, onValueChange = { detail = it }, label = { Text("Description") })
+                Text("Difficulty", fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    listOf("EASY", "NORMAL", "HARD", "EPIC").forEach { value ->
+                        FilterChip(
+                            selected = difficulty == value,
+                            onClick = { difficulty = value },
+                            label = { Text(value.lowercase().replaceFirstChar { it.uppercase() }) }
+                        )
+                    }
+                }
+                Text("Character attribute", fontWeight = FontWeight.Bold)
+                categories.chunked(3).forEach { row ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                        row.forEach { value ->
+                            FilterChip(
+                                selected = category == value,
+                                onClick = { category = value },
+                                label = { Text(value.lowercase().replaceFirstChar { it.uppercase() }) }
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = title.isNotBlank(),
+                onClick = { onSave(title.trim(), detail.trim().ifBlank { "Personal quest" }, difficulty, category) }
+            ) { Text("Save quest") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+    )
 }
 
 @Composable
@@ -200,20 +271,25 @@ private fun StatRow(name: String, value: Int, color: Color) {
 }
 
 @Composable
-private fun HabitScreen(habits: List<HabitWithStatus>, padding: PaddingValues, setHabit: (Int, Boolean) -> Unit) {
-    LazyColumn(
-        Modifier.fillMaxSize().padding(padding).padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+private fun HabitScreen(
+    habits: List<HabitWithStatus>,
+    padding: PaddingValues,
+    setHabit: (Int, Boolean) -> Unit,
+    addHabit: (String) -> Unit
+) {
+    var showEditor by remember { mutableStateOf(false) }
+    LazyColumn(Modifier.fillMaxSize().padding(padding).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             Text("Daily habits", color = Color.White, fontSize = 27.sp, fontWeight = FontWeight.Bold)
             Text("Build a streak one day at a time.", color = Muted)
+            Button(onClick = { showEditor = true }, modifier = Modifier.padding(top = 12.dp), colors = ButtonDefaults.buttonColors(containerColor = Purple)) {
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(Modifier.width(6.dp))
+                Text("Add habit")
+            }
         }
         items(habits, key = { it.id }) { habit ->
-            Row(
-                Modifier.fillMaxWidth().background(Panel, RoundedCornerShape(16.dp)).padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(Modifier.fillMaxWidth().background(Panel, RoundedCornerShape(16.dp)).padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                     checked = habit.completedToday,
                     onCheckedChange = { setHabit(habit.id, it) },
@@ -224,4 +300,22 @@ private fun HabitScreen(habits: List<HabitWithStatus>, padding: PaddingValues, s
         }
         item { Text("Habit check-ins are saved by date on this device.", color = Muted, fontSize = 12.sp) }
     }
+    if (showEditor) HabitEditorDialog(
+        onDismiss = { showEditor = false },
+        onSave = { title -> addHabit(title); showEditor = false }
+    )
+}
+
+@Composable
+private fun HabitEditorDialog(onDismiss: () -> Unit, onSave: (String) -> Unit) {
+    var title by remember { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add a habit") },
+        text = { OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Habit name") }, singleLine = true) },
+        confirmButton = {
+            TextButton(enabled = title.isNotBlank(), onClick = { onSave(title.trim()) }) { Text("Add habit") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+    )
 }
