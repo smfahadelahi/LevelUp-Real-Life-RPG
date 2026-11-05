@@ -27,4 +27,4 @@ data class QuestWithStatus(val id:Int,val title:String,val detail:String,val dif
 data class HabitEntity(@PrimaryKey val id:Int,val title:String)
 @Entity(tableName="habit_checkins",primaryKeys=["habitId","date"])
 data class HabitCheckInEntity(val habitId:Int,val date:String)
-data class HabitWithStatus(val id:Int,val title:String,val completedToday:Boolean)
+data class HabitWithStatus(val id:Int,val title:String,val completedToday:Boolean,val checkInsLast7Days:Int)
