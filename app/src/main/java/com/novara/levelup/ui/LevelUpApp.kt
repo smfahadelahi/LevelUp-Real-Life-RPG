@@ -104,7 +104,7 @@ private fun HomeScreen(player: PlayerEntity, quests: List<QuestWithStatus>, padd
 }
 
 @Composable
-private fun QuestScreen(quests: List<QuestEntity>, padding: PaddingValues, claim: (Int) -> Unit) {
+private fun QuestScreen(quests: List<QuestWithStatus>, padding: PaddingValues, claim: (Int) -> Unit) {
     LazyColumn(
         Modifier.fillMaxSize().padding(padding).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -146,7 +146,7 @@ private fun LevelCard(player: PlayerEntity) {
 }
 
 @Composable
-private fun QuestCard(quest: QuestEntity, claim: (Int) -> Unit) {
+private fun QuestCard(quest: QuestWithStatus, claim: (Int) -> Unit) {
     Row(
         Modifier.fillMaxWidth().background(Panel, RoundedCornerShape(17.dp)).padding(15.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -222,6 +222,6 @@ private fun HabitScreen(habits: List<HabitWithStatus>, padding: PaddingValues, s
                 Text(habit.title, color = Color.White)
             }
         }
-        item { Text("Habit check-ins are saved on this device. Date-based streak history is next.", color = Muted, fontSize = 12.sp) }
+        item { Text("Habit check-ins are saved by date on this device.", color = Muted, fontSize = 12.sp) }
     }
 }
