@@ -14,6 +14,7 @@ LEVELUP is a native Android personal-growth RPG. Turn real-world goals into ques
 - Attribute XP is awarded according to each quest's category
 - Create custom habits and check them off daily
 - Habit check-ins are stored by date, so a new day starts with a fresh checklist
+- Weekly habit consistency summary (check-ins over the last seven days)
 - Offline-first Room database and observable ViewModel state
 - Database migrations for the evolving local schema
 
@@ -30,7 +31,7 @@ LEVELUP is a native Android personal-growth RPG. Turn real-world goals into ques
 ## Project setup
 
 1. Install Android Studio and JDK 17.
-2. Install Android SDK Platform 35.
+2. Install Android SDK Platform 36.
 3. Open this repository in Android Studio.
 4. Use Gradle 8.11.1 for the project.
 5. Sync Gradle and run the `app` configuration on an API 26+ emulator or device.
@@ -57,7 +58,7 @@ docs/         Product, mechanics, development and release notes
 
 ## Current limitations
 
-This is an actively developed MVP, not yet a Play Store release. Habit check-ins are saved by date, but streak summaries and calendar history still need a dedicated UI. There is no account, cloud backup, social leaderboard, payment, analytics, or notification system. Attribute levels currently advance in 100-XP steps within each attribute.
+This is an actively developed MVP, not yet a Play Store release. Habit check-ins are saved by date, but consecutive-day streaks and a full calendar history still need a dedicated UI. There is no account, cloud backup, social leaderboard, payment, analytics, or notification system. Attribute levels currently advance in 100-XP steps within each attribute.
 
 ## Product principles
 
