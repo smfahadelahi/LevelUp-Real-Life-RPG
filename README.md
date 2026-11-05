@@ -36,14 +36,14 @@ LEVELUP is a native Android personal-growth RPG. Turn real-world goals into ques
 4. Use Gradle 8.11.1 for the project.
 5. Sync Gradle and run the `app` configuration on an API 26+ emulator or device.
 
-The GitHub Actions workflow also installs Gradle 8.11.1, builds the debug APK, and runs unit tests on pushes to `main`.
+The GitHub Actions workflow also installs Gradle 8.11.1, builds the debug APK, runs unit tests, and executes Room instrumentation tests on an Android 16 emulator for pushes to `main`.
 
 ## Package details
 
 - Application ID: `com.novara.levelup`
 - Minimum Android: API 26
 - Target SDK: 36
-- Current version: 0.2.0
+- Current version: 0.3.0
 
 ## Repository layout
 
