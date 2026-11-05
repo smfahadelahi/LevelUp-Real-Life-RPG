@@ -154,7 +154,7 @@ private fun QuestCard(quest: QuestWithStatus, claim: (Int) -> Unit) {
         Column(Modifier.weight(1f)) {
             Text(quest.title, color = Color.White, fontWeight = FontWeight.Bold)
             Text(quest.detail, color = Muted, fontSize = 12.sp)
-            Text("+${quest.xpReward} XP · ${quest.difficulty}", color = Gold, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            Text("${quest.category}  ·  +${quest.xpReward} XP · ${quest.difficulty}", color = Gold, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.width(8.dp))
         if (quest.completedToday) {
@@ -172,14 +172,14 @@ private fun CharacterScreen(player: PlayerEntity, padding: PaddingValues) {
     val level = player.totalXp / 100 + 1
     Column(Modifier.fillMaxSize().padding(padding).padding(20.dp), verticalArrangement = Arrangement.spacedBy(15.dp)) {
         Text("Your character", color = Color.White, fontSize = 27.sp, fontWeight = FontWeight.Bold)
-        Text("Your real-world skills become your stats.", color = Muted)
+        Text("Each completed quest strengthens its matching attribute.", color = Muted)
         LevelCard(player)
-        StatRow("Strength", level.coerceAtMost(10), Purple)
-        StatRow("Intelligence", level.coerceAtMost(10), Cyan)
-        StatRow("Wellness", level.coerceAtMost(10), Gold)
-        StatRow("Discipline", level.coerceAtMost(10), Purple)
-        StatRow("Creativity", level.coerceAtMost(10), Cyan)
-        Text("Attribute-specific quest rewards are planned for a future update.", color = Muted, fontSize = 12.sp)
+        StatRow("Strength", (player.strengthXp / 100 + 1).coerceAtMost(10), Purple)
+        StatRow("Intelligence", (player.intelligenceXp / 100 + 1).coerceAtMost(10), Cyan)
+        StatRow("Wellness", (player.wellnessXp / 100 + 1).coerceAtMost(10), Gold)
+        StatRow("Discipline", (player.disciplineXp / 100 + 1).coerceAtMost(10), Purple)
+        StatRow("Creativity", (player.creativityXp / 100 + 1).coerceAtMost(10), Cyan)
+        Text("Attribute XP is earned from quests in each skill category.", color = Muted, fontSize = 12.sp)
     }
 }
 
