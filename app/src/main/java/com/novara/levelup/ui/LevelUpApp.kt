@@ -22,8 +22,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.platform.LocalContext
 import com.novara.levelup.data.LevelUpDatabase
 import com.novara.levelup.data.LevelUpRepository
-import com.novara.levelup.data.QuestEntity
-import com.novara.levelup.data.HabitEntity
+import com.novara.levelup.data.QuestWithStatus
+import com.novara.levelup.data.HabitWithStatus
 import com.novara.levelup.data.PlayerEntity
 
 private val Bg=Color(0xFF0B1020)
@@ -80,7 +80,7 @@ fun LevelUpApp() {
 }
 
 @Composable
-private fun HomeScreen(player: PlayerEntity, quests: List<QuestEntity>, padding: PaddingValues, claim: (Int) -> Unit) {
+private fun HomeScreen(player: PlayerEntity, quests: List<QuestWithStatus>, padding: PaddingValues, claim: (Int) -> Unit) {
     LazyColumn(
         Modifier.fillMaxSize().padding(padding).padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(17.dp)
@@ -157,7 +157,7 @@ private fun QuestCard(quest: QuestEntity, claim: (Int) -> Unit) {
             Text("+${quest.xpReward} XP · ${quest.difficulty}", color = Gold, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.width(8.dp))
-        if (quest.completed) {
+        if (quest.completedToday) {
             Icon(Icons.Default.CheckCircle, "Completed", tint = Cyan)
         } else {
             Button(onClick = { claim(quest.id) }, colors = ButtonDefaults.buttonColors(containerColor = Purple)) {
@@ -200,7 +200,7 @@ private fun StatRow(name: String, value: Int, color: Color) {
 }
 
 @Composable
-private fun HabitScreen(habits: List<HabitEntity>, padding: PaddingValues, setHabit: (Int, Boolean) -> Unit) {
+private fun HabitScreen(habits: List<HabitWithStatus>, padding: PaddingValues, setHabit: (Int, Boolean) -> Unit) {
     LazyColumn(
         Modifier.fillMaxSize().padding(padding).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
