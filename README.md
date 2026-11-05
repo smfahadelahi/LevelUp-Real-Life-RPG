@@ -41,7 +41,7 @@ The GitHub Actions workflow also installs Gradle 8.11.1, builds the debug APK, a
 
 - Application ID: `com.novara.levelup`
 - Minimum Android: API 26
-- Target SDK: 35
+- Target SDK: 36
 - Current version: 0.2.0
 
 ## Repository layout
