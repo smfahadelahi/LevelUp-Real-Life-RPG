@@ -295,7 +295,10 @@ private fun HabitScreen(
                     onCheckedChange = { setHabit(habit.id, it) },
                     colors = CheckboxDefaults.colors(checkedColor = Cyan)
                 )
-                Text(habit.title, color = Color.White)
+                Column(Modifier.weight(1f)) {
+                    Text(habit.title, color = Color.White)
+                    Text("${habit.checkInsLast7Days}/7 days this week", color = Muted, fontSize = 11.sp)
+                }
             }
         }
         item { Text("Habit check-ins are saved by date on this device.", color = Muted, fontSize = 12.sp) }
