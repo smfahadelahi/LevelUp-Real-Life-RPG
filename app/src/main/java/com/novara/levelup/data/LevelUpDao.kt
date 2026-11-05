@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao abstract class LevelUpDao {
  @Query("SELECT * FROM player WHERE id=1") abstract fun observePlayer():Flow<PlayerEntity?>
  @Query("""SELECT id,title,detail,difficulty,category,xpReward,CASE WHEN lastCompletedDate=:today THEN 1 ELSE 0 END AS completedToday FROM quests ORDER BY id""") abstract fun observeQuests(today:String):Flow<List<QuestWithStatus>>
- @Query("""SELECT habits.id,habits.title,CASE WHEN habit_checkins.habitId IS NULL THEN 0 ELSE 1 END AS completedToday FROM habits LEFT JOIN habit_checkins ON habits.id=habit_checkins.habitId AND habit_checkins.date=:today ORDER BY habits.id""") abstract fun observeHabits(today:String):Flow<List<HabitWithStatus>>
+ @Query("""SELECT habits.id,habits.title,CASE WHEN habit_checkins.habitId IS NULL THEN 0 ELSE 1 END AS completedToday,(SELECT COUNT(*) FROM habit_checkins weekly WHERE weekly.habitId=habits.id AND weekly.date BETWEEN date(:today,'-6 day') AND :today) AS checkInsLast7Days FROM habits LEFT JOIN habit_checkins ON habits.id=habit_checkins.habitId AND habit_checkins.date=:today ORDER BY habits.id""") abstract fun observeHabits(today:String):Flow<List<HabitWithStatus>>
  @Query("SELECT * FROM quests WHERE id=:id") abstract suspend fun getQuest(id:Int):QuestEntity?
  @Insert(onConflict=OnConflictStrategy.IGNORE) abstract suspend fun insertPlayer(player:PlayerEntity)
  @Insert(onConflict=OnConflictStrategy.IGNORE) abstract suspend fun insertQuests(quests:List<QuestEntity>)
