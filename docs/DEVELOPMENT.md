@@ -16,3 +16,6 @@ Room is the source of truth for player, quest, and habit records. A repository e
 - Character attribute progression is a visual placeholder pending attribute-specific quest rewards.
 - There are no accounts, cloud backup, payments, ads, or public leaderboards.
 - CI is configured; check the first GitHub Actions run before treating the build as verified.
+
+## Database library
+Room 2.8.5 is used for SQLite persistence and KSP-based DAO generation.
