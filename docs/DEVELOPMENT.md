@@ -1,8 +1,10 @@
 # Development Notes
 ## Local requirements
-- Android Studio and Android SDK Platform 35
+- Android Studio and Android SDK Platform 36
 - JDK 17
 - Gradle 8.11.1
+- Android Gradle Plugin 8.10.0
+- Kotlin 2.1.21 and KSP 2.1.21-2.0.1
 - Android emulator or physical device (API 26+)
 
 ## Data architecture
