@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.Flow
  @Insert(onConflict=OnConflictStrategy.IGNORE) abstract suspend fun insertHabits(habits:List<HabitEntity>)
  @Query("SELECT COALESCE(MAX(id),0)+1 FROM quests") abstract suspend fun nextQuestId():Int
  @Query("SELECT COALESCE(MAX(id),0)+1 FROM habits") abstract suspend fun nextHabitId():Int
- @Insert abstract suspend fun insertQuest(quest:QuestEntity)
- @Insert abstract suspend fun insertHabit(habit:HabitEntity)
+ @Insert(onConflict=OnConflictStrategy.IGNORE) abstract suspend fun insertQuest(quest:QuestEntity)
+ @Insert(onConflict=OnConflictStrategy.IGNORE) abstract suspend fun insertHabit(habit:HabitEntity)
+ @Transaction open suspend fun createQuest(title:String,detail:String,difficulty:String,category:String,xp:Int){insertQuest(QuestEntity(nextQuestId(),title,detail,difficulty,category,xp))}
+ @Transaction open suspend fun createHabit(title:String){insertHabit(HabitEntity(nextHabitId(),title))}
  @Query("UPDATE quests SET lastCompletedDate=:today WHERE id=:id AND (lastCompletedDate IS NULL OR lastCompletedDate!=:today)") abstract suspend fun markQuestComplete(id:Int,today:String):Int
  @Query("""UPDATE player SET totalXp=totalXp+:amount,strengthXp=strengthXp+CASE WHEN :category='STRENGTH' THEN :amount ELSE 0 END,intelligenceXp=intelligenceXp+CASE WHEN :category='INTELLIGENCE' THEN :amount ELSE 0 END,wellnessXp=wellnessXp+CASE WHEN :category='WELLNESS' THEN :amount ELSE 0 END,disciplineXp=disciplineXp+CASE WHEN :category='DISCIPLINE' THEN :amount ELSE 0 END,creativityXp=creativityXp+CASE WHEN :category='CREATIVITY' THEN :amount ELSE 0 END WHERE id=1""") abstract suspend fun addXp(amount:Int,category:String)
  @Insert(onConflict=OnConflictStrategy.IGNORE) abstract suspend fun addHabitCheckIn(checkIn:HabitCheckInEntity)
