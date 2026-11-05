@@ -12,8 +12,8 @@ Room is the source of truth for player, quest, and habit records. A repository e
 
 ## Current limitations
 - Starter quests and habits are seeded on first launch.
-- Habit check-ins store a current completion flag; calendar history and streak calculations are not implemented.
-- Character attribute progression is a visual placeholder pending attribute-specific quest rewards.
+- Habit check-ins are stored per date and the UI shows a rolling seven-day completion count; consecutive-day streaks and a full calendar view are not implemented.
+- Character attribute XP is awarded by quest category and each attribute has its own level.
 - There are no accounts, cloud backup, payments, ads, or public leaderboards.
 - CI is configured; check the first GitHub Actions run before treating the build as verified.
 
