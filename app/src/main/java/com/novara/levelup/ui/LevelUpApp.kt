@@ -95,7 +95,7 @@ private fun HomeScreen(player: PlayerEntity, quests: List<QuestWithStatus>, padd
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Today's quests", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Text("${quests.count { it.completed }}/${quests.size} DONE", color = Cyan, fontSize = 11.sp)
+                Text("${quests.count { it.completedToday }}/${quests.size} DONE", color = Cyan, fontSize = 11.sp)
             }
         }
         items(quests, key = { it.id }) { QuestCard(it, claim) }
