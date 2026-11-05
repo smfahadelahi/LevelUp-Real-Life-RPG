@@ -16,9 +16,9 @@ class LevelUpRepository(private val dao:LevelUpDao){
  }
  suspend fun addQuest(title:String,detail:String,difficulty:String,category:String){
   val xp=when(difficulty){"EASY"->10;"NORMAL"->25;"HARD"->50;else->100}
-  dao.insertQuest(QuestEntity(dao.nextQuestId(),title,detail,difficulty,category,xp))
+  dao.createQuest(title,detail,difficulty,category,xp)
  }
- suspend fun addHabit(title:String){dao.insertHabit(HabitEntity(dao.nextHabitId(),title))}
+ suspend fun addHabit(title:String){dao.createHabit(title)}
  suspend fun claimQuest(id:Int,today:String)=dao.claimQuest(id,today)
  suspend fun setHabitCompleted(id:Int,completed:Boolean,today:String)=dao.setHabitCompleted(id,completed,today)
 }
